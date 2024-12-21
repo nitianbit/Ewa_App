@@ -1,59 +1,55 @@
+// app/layout.tsx
 import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import { View, StyleSheet } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { FAB } from 'react-native-paper'; // Import Floating Action Button
+import HomeScreen from './home';
+import LoginScreen from './login';
+import RegisterScreen from './register';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // Import the icon set
+import DashboardScreen from './dashboard';
+import ServicesScreen from './services';
+import ServiceDetailScreen from './ServiceDetail';
+import AppointmentsScreen from './appointment'
+import ProfileScreen from './Profile';
+const Tab = createBottomTabNavigator();
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
+    <>
+        <Tab.Navigator screenOptions={{ tabBarActiveTintColor: '#005a9c', tabBarInactiveTintColor: '#7d7d7d' }}>
+      <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarIcon: ({ color }) => <MaterialIcons name="home" color={color} size={24} /> }} />
+      <Tab.Screen name="Appointments" component={AppointmentsScreen} options={{ tabBarIcon: ({ color }) => <MaterialIcons  name="receipt-long" size={30} color={color}  />}} />
+      <Tab.Screen name="Wellness" component={RegisterScreen} options={{ tabBarIcon: ({ color }) => <MaterialIcons  name="receipt-long" size={30} color={color}  />}} />
+      <Tab.Screen name="Services" component={ServicesScreen} options={{ tabBarIcon: ({ color }) => <MaterialIcons name="medical-services" color={color} size={24} /> }} />
+      <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ tabBarIcon: ({ color }) => <MaterialIcons name="dashboard" color={color} size={24} /> }} />
+
+          </Tab.Navigator>
+
+      {/* Floating Call Button */}
+      <FAB
+        icon="phone"
+        style={styles.fab}
+        onPress={() => console.log('Call button pressed')}
+        color="#ffffff"
+        animated
       />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    </Tabs>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  iconStyle: {
+    padding: 10,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 100,
+    right:10, // Position above the tab bar
+    alignSelf: 'center',
+    borderRadius:30,
+    backgroundColor: '#1dbf73', // Color for the FAB
+  },
+});
